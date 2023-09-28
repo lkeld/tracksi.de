@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>TrackSide - Coming Soon</title>
+  <style>
+    body { margin: 0; }
+    .wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: linear-gradient(90deg, #00003a 0%, #000037 50%, #000044 100%);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 50px;
+      margin-bottom: 50px;
+      animation: fade-in 1s ease-in;
+    }
+
+    .logo img {
+      width: 300px;
+      height: auto;
+      animation: count-in 1s ease-in;
+    }
+
+    .time-to {
+      text-align: center;
+      font-family: Helvetica, sans-serif;
+      color: white;
+      font-size: 35px;
+      letter-spacing: .1px;
+      animation: fade-in 1s ease-in;
+    }
+
+    .time-to span {
+      display: block;
+      font-size: 80px;
+      color: white;
+      font-weight: 600;
+      animation: fade-in 1s ease-in;
+      animation-delay: 1s;
+      animation-name: count-in;
+      animation-duration: 1s;
+      animation-fill-mode: forwards;
+    }
+
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes count-in {
+      0% {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .centered-image {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 70px;
+      animation: count-in 1s ease-in;
+    }
+
+    .centered-image img {
+      width: 200px;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap" ng-app="app">
+    <div class="logo">
+      <img src="https://svgur.com/i/xyp.svg" alt="Logo">
+    </div>
+    <div class="time-to">
+      <span countdown date="January 15, 2024 12:00:00">&nbsp;</span>
+    </div>
+    <div class="centered-image">
+      <img src="https://svgur.com/i/xx4.svg" alt="Centered Image">
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+  <script>
+    angular.module('app', [])
+
+    .directive('countdown', ['Util', '$interval', function(Util, $interval) {
+      return {
+        restrict: 'A',
+        scope: {
+          date: '@'
+        },
+        link: function(scope, element) {
+          var future = new Date(scope.date);
+          $interval(function() {
+            var diff = Math.floor((future.getTime() - new Date().getTime()) / 1000);
+            element.text(Util.dhms(diff));
+          }, 1000);
+        }
+      };
+    }])
+
+    .factory('Util', [function() {
+      return {
+        dhms: function(t) {
+          var days = Math.floor(t / 86400);
+          t -= days * 86400;
+          var hours = Math.floor(t / 3600) % 24;
+          t -= hours * 3600;
+          var minutes = Math.floor(t / 60) % 60;
+          t -= minutes * 60;
+          var seconds = t % 60;
+          return [days + 'd', hours + 'h', minutes + 'm', seconds + 's'].join(' ');
+        }
+      };
+    }]);
+  </script>
+</body>
+</html>
